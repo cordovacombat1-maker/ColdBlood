@@ -5,7 +5,7 @@ import { PGlite } from '@electric-sql/pglite'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-const dir = 'supabase/migrations'
+const dir = process.argv[2] ?? 'supabase/migrations'
 const db = new PGlite()
 
 await db.exec(`
