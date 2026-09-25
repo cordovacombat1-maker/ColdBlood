@@ -1,0 +1,43 @@
+# Sets up the Supabase database without using the Supabase SQL Editor.
+# Needs one repository secret, SUPABASE_DB_URL: the "Session pooler"
+# connection string from Supabase (Connect button), with your database
+# password filled in. Run it from the Actions tab → Set up database → Run workflow.
+name: Set up database
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the secret is set
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "::error::The SUPABASE_DB_URL secret is missing. Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          case "$SUPABASE_DB_URL" in
+            *YOUR-PASSWORD*) echo "::error::Replace [YOUR-PASSWORD] in SUPABASE_DB_URL with your real database password."; exit 1 ;;
+          esac
+
+      - name: Install Postgres client
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+
+      - name: Create tables (skipped if already set up)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          exists=$(psql "$SUPABASE_DB_URL" -tAc "select to_regclass('public.profiles') is not null")
+          if [ "$exists" = "t" ]; then
+            echo "The database is already set up (the profiles table exists). Nothing to do."
+            exit 0
+          fi
+          # One transaction: if anything fails, nothing is left half-created.
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction \
+            -f supabase/migrations/20260925000001_init.sql
+          echo "Done. Your database is set up."
