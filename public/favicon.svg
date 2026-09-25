@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0a0a0a"/>
+  <path d="M256 92c-52 78-120 150-120 232a120 120 0 0 0 240 0c0-82-68-154-120-232z" fill="#e10600"/>
+  <text x="256" y="372" text-anchor="middle" font-family="Oswald, Impact, Arial Narrow, sans-serif" font-weight="700" font-size="120" fill="#f5f3ee">CB</text>
+</svg>

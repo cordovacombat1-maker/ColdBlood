@@ -1,0 +1,76 @@
+@import "tailwindcss";
+@import "@fontsource/oswald/latin-500.css";
+@import "@fontsource/oswald/latin-700.css";
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-600.css";
+
+@theme {
+  --color-ink: #0a0a0a;
+  --color-panel: #151515;
+  --color-raised: #1f1f1f;
+  --color-line: #2c2c2c;
+  --color-bone: #f5f3ee;
+  --color-mute: #a09c94;
+  --color-blood: #e10600;
+  --color-blood-dark: #9e0400;
+  --font-display: "Oswald", "Arial Narrow", Impact, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  input, select, textarea {
+    font-size: 16px; /* stops iOS zooming on focus */
+  }
+  input[type="date"], input[type="datetime-local"], input[type="time"] {
+    color-scheme: dark;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-blood);
+    outline-offset: 2px;
+  }
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.prose-mk {
+  line-height: 1.75;
+}
+.prose-mk p {
+  margin: 0 0 1em;
+}
+.prose-mk h1, .prose-mk h2, .prose-mk h3 {
+  margin: 1.2em 0 0.6em;
+  line-height: 1.2;
+}
+.prose-mk ol, .prose-mk ul {
+  padding-left: 1.4em;
+  margin: 0 0 1em;
+  list-style: revert;
+}
+.prose-mk blockquote {
+  border-left: 3px solid var(--color-blood);
+  padding-left: 1em;
+  opacity: 0.9;
+}
+.reader-sepia {
+  background: #f1e7d0;
+  color: #3b2f22;
+}
