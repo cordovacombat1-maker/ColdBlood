@@ -32,10 +32,14 @@ jobs:
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          exists=$(psql "$SUPABASE_DB_URL" -tAc "select to_regclass('public.profiles') is not null")
-          if [ "$exists" = "t" ]; then
-            echo "The database is already set up (the profiles table exists). Nothing to do."
+          state=$(psql "$SUPABASE_DB_URL" -tAc "select (to_regclass('public.mind_sessions') is not null)::text || ',' || (to_regclass('public.app_admins') is not null)::text")
+          if [ "$state" = "true,true" ]; then
+            echo "The database is already set up. Nothing to do."
             exit 0
+          fi
+          if [ "$state" != "false,false" ]; then
+            echo "::error::The database is partly set up (probably from an earlier SQL Editor attempt). Ask for help before re-running."
+            exit 1
           fi
           # One transaction: if anything fails, nothing is left half-created.
           psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction \
